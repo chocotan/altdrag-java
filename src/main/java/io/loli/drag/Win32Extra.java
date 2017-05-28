@@ -22,25 +22,3 @@ public interface Win32Extra extends W32APIOptions {
 
     HWND ChildWindowFromPointEx(HWND hwndParent, long point, int uFlags);
 }
-
-class Win32Utils {
-    public static HWND getWindowFromCursorPos() {
-        long[] getPos = new long[1];
-        Win32Extra.INSTANCE.GetCursorPos(getPos);
-        HWND hwnd = Win32Extra.INSTANCE.WindowFromPoint(getPos[0]);
-//        HWND childHwnd = getHiddenChildWindowFromPoint(hwnd, getPos[0]);
-//        hwnd = childHwnd;
-        return hwnd;
-    }
-
-    public static HWND getHiddenChildWindowFromPoint(HWND inHwnd, long point) {
-        long[] getPos = new long[1];
-        getPos[0] = point;
-        if (!Win32Extra.INSTANCE.ScreenToClient(inHwnd, getPos))
-            return inHwnd; // if point is not correct use original hwnd.
-        HWND childHwnd = Win32Extra.INSTANCE.ChildWindowFromPointEx(inHwnd, getPos[0], CWP_ALL);
-        if (childHwnd == null) // if childHwnd is not correct use original hwnd.
-            return inHwnd;
-        return childHwnd;
-    }
-}
