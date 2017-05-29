@@ -5,3 +5,5 @@ Yet another alt-drag application on Windows
 ```
 mvn clean package assembly:single
 ```
+
+Only tested on Windows 10 (SurfaceBook)
