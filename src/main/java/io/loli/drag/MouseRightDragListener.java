@@ -3,6 +3,8 @@ package io.loli.drag;
 import com.sun.jna.platform.win32.WinDef;
 import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseInputAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +27,8 @@ public class MouseRightDragListener extends NativeMouseInputAdapter {
     private int[] windowStartPoint;
     private int[] windowSize;
     private volatile boolean pressed;
+    private static final Logger logger = LoggerFactory.getLogger(MouseLeftDragListener.class);
+
 
     private int dragType;
     private static ExecutorService dragSingleExecutor = Executors.newSingleThreadExecutor();
@@ -51,9 +55,8 @@ public class MouseRightDragListener extends NativeMouseInputAdapter {
             return;
         }
         hwnd = getWindowAtMouse();
-        WinDef.HWND desktop = getDesktop();
-        if (desktop == hwnd) {
-            // TODO 桌面的处理
+        if (isFullScreen(hwnd)) {
+            logger.warn("Current window is in full screen");
             return;
         }
         mouseStartPoint = new int[]{(int) pressEvent.getPoint().getX(), (int) pressEvent.getPoint().getY()};
