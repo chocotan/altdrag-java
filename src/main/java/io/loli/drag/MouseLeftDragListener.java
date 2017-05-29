@@ -109,6 +109,7 @@ public class MouseLeftDragListener extends NativeMouseInputAdapter {
                         0x0010);
             });
             dragQueue.add(submit);
+            logger.debug("Move to {}x{}x{}x{}", x, y, windowSize[0], windowSize[1]);
         }
     }
 }

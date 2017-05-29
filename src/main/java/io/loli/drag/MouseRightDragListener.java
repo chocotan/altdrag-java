@@ -60,10 +60,6 @@ public class MouseRightDragListener extends NativeMouseInputAdapter {
             return;
         }
         mouseStartPoint = new int[]{(int) pressEvent.getPoint().getX(), (int) pressEvent.getPoint().getY()};
-        // if the window is maximum, restore it to the position
-        if (isMaximum(hwnd)) {
-            // TODO 还原，大小根据鼠标位移来判断
-        }
         int windowPosition[] = getWindowRect(hwnd);
         double first = Math.pow(mouseStartPoint[0] - windowPosition[0], 2) + Math.pow(mouseStartPoint[1] - windowPosition[1], 2);
         double second = Math.pow(windowPosition[2] - mouseStartPoint[0], 2) + Math.pow(mouseStartPoint[1] - windowPosition[1], 2);
@@ -96,42 +92,46 @@ public class MouseRightDragListener extends NativeMouseInputAdapter {
             dragQueue.parallelStream().filter(f -> !f.isDone())
                     .forEach(f -> f.cancel(true));
             dragQueue.clear();
+            int offsetX = dragEvent.getX() - mouseStartPoint[0];
+            int offsetY = dragEvent.getY() - mouseStartPoint[1];
+            int x = 0, y = 0, w = 0, h = 0;
+            if (dragType == 1) {
+                x = windowStartPoint[0] + offsetX;
+                y = windowStartPoint[1] + offsetY;
+                w = windowSize[0] - offsetX;
+                h = windowSize[1] - offsetY;
+            }
+            if (dragType == 2) {
+                x = windowStartPoint[0];
+                y = windowStartPoint[1] + offsetY;
+                w = windowSize[0] + offsetX;
+                h = windowSize[1] - offsetY;
+            }
+            if (dragType == 3) {
+                x = windowStartPoint[0] + offsetX;
+                y = windowStartPoint[1];
+                w = windowSize[0] - offsetX;
+                h = windowSize[1] + offsetY;
+            }
+            if (dragType == 4) {
+                x = windowStartPoint[0];
+                y = windowStartPoint[1];
+                w = windowSize[0] + offsetX;
+                h = windowSize[1] + offsetY;
+            }
+            int finalX = x;
+            int finalY = y;
+            int finalW = w;
+            int finalH = h;
             Future<?> submit = dragSingleExecutor.submit(() -> {
-                int offsetX = dragEvent.getX() - mouseStartPoint[0];
-                int offsetY = dragEvent.getY() - mouseStartPoint[1];
-                int x = 0, y = 0, w = 0, h = 0;
-                if (dragType == 1) {
-                    x = windowStartPoint[0] + offsetX;
-                    y = windowStartPoint[1] + offsetY;
-                    w = windowSize[0] - offsetX;
-                    h = windowSize[1] - offsetY;
-                }
-                if (dragType == 2) {
-                    x = windowStartPoint[0];
-                    y = windowStartPoint[1] + offsetY;
-                    w = windowSize[0] + offsetX;
-                    h = windowSize[1] - offsetY;
-                }
-                if (dragType == 3) {
-                    x = windowStartPoint[0] + offsetX;
-                    y = windowStartPoint[1];
-                    w = windowSize[0] - offsetX;
-                    h = windowSize[1] + offsetY;
-                }
-                if (dragType == 4) {
-                    x = windowStartPoint[0];
-                    y = windowStartPoint[1];
-                    w = windowSize[0] + offsetX;
-                    h = windowSize[1] + offsetY;
-                }
-
-                move(hwnd, x, y,
-                        w,
-                        h,
+                move(hwnd, finalX, finalY,
+                        finalW,
+                        finalH,
                         // TODO 可配置 NO_ACTIVE
                         0x0010);
             });
             dragQueue.add(submit);
+            logger.debug("Resize to {}x{}x{}x{}", x, y, w, h);
         }
     }
 }
