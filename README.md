@@ -8,4 +8,5 @@ mvn clean package assembly:single
 
 ## TODOs
 1. Ignore key and mouse events while in full screen
-2. Prevent default action when pressing the ALT key
+2. Double click
+3. Ignore desktop

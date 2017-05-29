@@ -24,8 +24,7 @@ public class MouseRightDragListener extends NativeMouseInputAdapter {
     private int[] mouseStartPoint;
     private int[] windowStartPoint;
     private int[] windowSize;
-    private long[] mousePosition;
-    private boolean pressed;
+    private volatile boolean pressed;
 
     private int dragType;
     private static ExecutorService dragSingleExecutor = Executors.newSingleThreadExecutor();
@@ -33,9 +32,19 @@ public class MouseRightDragListener extends NativeMouseInputAdapter {
 
     @Override
     public void nativeMouseReleased(NativeMouseEvent nativeEvent) {
-        super.nativeMouseReleased(nativeEvent);
-        pressed = false;
+        if (nativeEvent.getButton() == BUTTON2) {
+            super.nativeMouseReleased(nativeEvent);
+            pressed = false;
+        }
     }
+
+    @Override
+    public void nativeMouseMoved(NativeMouseEvent nativeEvent) {
+        if (pressed) {
+            nativeMouseDragged(nativeEvent);
+        }
+    }
+
 
     public void nativeMousePressed(NativeMouseEvent pressEvent) {
         if (pressEvent.getButton() != BUTTON2) {
@@ -72,8 +81,8 @@ public class MouseRightDragListener extends NativeMouseInputAdapter {
         }
         windowSize = new int[]{windowPosition[2] - windowPosition[0], windowPosition[3] - windowPosition[1]};
         windowStartPoint = new int[]{windowPosition[0], windowPosition[1]};
-        mousePosition = getMousePosition();
         pressed = true;
+        preventDefault(pressEvent);
     }
 
     @Override
@@ -87,8 +96,6 @@ public class MouseRightDragListener extends NativeMouseInputAdapter {
             Future<?> submit = dragSingleExecutor.submit(() -> {
                 int offsetX = dragEvent.getX() - mouseStartPoint[0];
                 int offsetY = dragEvent.getY() - mouseStartPoint[1];
-//                int x = windowStartPoint[0] + offsetX;
-//                int y = windowStartPoint[1] + offsetY;
                 int x = 0, y = 0, w = 0, h = 0;
                 if (dragType == 1) {
                     x = windowStartPoint[0] + offsetX;
