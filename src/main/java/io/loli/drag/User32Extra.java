@@ -29,5 +29,5 @@ public interface User32Extra extends User32 {
     boolean GetCursorPos(int[] p);
 
 
-
+    HWND GetActiveWindow();
 }

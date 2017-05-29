@@ -48,8 +48,8 @@ public class MouseLeftDragListener extends NativeMouseInputAdapter {
             return;
         }
         hwnd = getWindowAtMouse();
-        if (isDesktop(hwnd)) {
-            logger.warn("Could not move desktop");
+        if (isFullScreen(hwnd)) {
+            logger.warn("Current window is in full screen");
             return;
         }
         mouseStartPoint = new int[]{(int) pressEvent.getPoint().getX(), (int) pressEvent.getPoint().getY()};

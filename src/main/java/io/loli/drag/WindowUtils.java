@@ -10,6 +10,7 @@ import org.jnativehook.mouse.NativeMouseEvent;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
+import static com.sun.jna.platform.win32.User32.WS_EX_TOPMOST;
 import static com.sun.jna.platform.win32.WinUser.*;
 import static io.loli.drag.Win32Extra.CWP_ALL;
 
@@ -35,6 +36,13 @@ public class WindowUtils {
 //        System.out.println(ow);
 ////        System.out.println(testParent==hwnd);
         return false;
+    }
+
+    public static boolean isFullScreen(HWND hwnd) {
+        HWND desktop = getDesktop();
+        int[] windowRect = getWindowRect(desktop);
+        int[] windowRect1 = getWindowRect(hwnd);
+        return Arrays.equals(windowRect, windowRect1);
     }
 
     public static int[] getMousePosition() {
@@ -72,7 +80,6 @@ public class WindowUtils {
         // 设置window的新的坐标
         int x = getPos[0] - (position[2] - position[0]) / 2;
         int y = getPos[1] - ((position[3] - position[1]) / 2);
-        System.out.println(getPos[1] + "," + Arrays.toString(position));
         move(hwnd, x, y,
                 position[2] - position[0],
                 position[3] - position[1],

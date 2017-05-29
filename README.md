@@ -5,8 +5,3 @@ Yet another alt-drag application on Windows
 ```
 mvn clean package assembly:single
 ```
-
-## TODOs
-1. Ignore key and mouse events while in full screen
-2. Double click
-3. Ignore desktop
