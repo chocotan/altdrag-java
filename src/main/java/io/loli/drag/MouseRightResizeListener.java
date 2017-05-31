@@ -21,12 +21,12 @@ import static org.jnativehook.mouse.NativeMouseEvent.BUTTON2;
 /**
  * @author chocotan
  */
-public class MouseRightDragListener extends NativeMouseInputAdapter {
+public class MouseRightResizeListener extends NativeMouseInputAdapter {
     private WinDef.HWND hwnd;
     private int[] mouseStartPoint;
     private int[] windowStartPoint;
     private int[] windowSize;
-    private volatile boolean pressed;
+    static volatile boolean pressed = false;
     private static final Logger logger = LoggerFactory.getLogger(MouseLeftDragListener.class);
 
 

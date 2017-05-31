@@ -1,7 +1,6 @@
 package io.loli.drag;
 
 import ch.qos.logback.classic.Level;
-import com.sun.javaws.Globals;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyListener;
@@ -9,7 +8,6 @@ import org.jnativehook.mouse.NativeMouseInputListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.logging.LogManager;
 
@@ -17,7 +15,7 @@ public class AltDragApplication {
     private static final Logger altDragLogger = LoggerFactory.getLogger(AltDragApplication.class);
 
     private static NativeMouseInputListener leftDragListener = new MouseLeftDragListener();
-    private static NativeMouseInputListener rightDragListener = new MouseRightDragListener();
+    private static NativeMouseInputListener rightDragListener = new MouseRightResizeListener();
     private static NativeKeyListener nativeKeyListener = new AltKeyListener(Arrays.asList(leftDragListener, rightDragListener));
 
     public static void main(String[] args) throws InterruptedException {

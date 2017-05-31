@@ -30,7 +30,7 @@ public class MouseLeftDragListener extends NativeMouseInputAdapter {
     private static List<Future<?>> dragQueue = new LinkedList<>();
 
     private static final Logger logger = LoggerFactory.getLogger(MouseLeftDragListener.class);
-    private volatile boolean pressed = false;
+    static volatile boolean pressed = false;
 
     public void nativeMouseClicked(NativeMouseEvent nativeEvent) {
     }

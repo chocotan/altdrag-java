@@ -3,14 +3,11 @@ package io.loli.drag;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.keyboard.NativeKeyAdapter;
 import org.jnativehook.keyboard.NativeKeyEvent;
-import org.jnativehook.mouse.NativeMouseAdapter;
-import org.jnativehook.mouse.NativeMouseInputAdapter;
 import org.jnativehook.mouse.NativeMouseInputListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -48,6 +45,9 @@ public class AltKeyListener extends NativeKeyAdapter {
                 GlobalScreen.removeNativeMouseMotionListener(listener);
             });
             listeners.clear();
+            MouseLeftDragListener.pressed = false;
+            MouseRightResizeListener.pressed = false;
+
         }
     }
 }
